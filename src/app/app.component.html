@@ -1,12 +1,12 @@
 <!-- <app-top-bar></app-top-bar> -->
 
+{{ this.popup.show }}
 <div class="bg-1" style="height:100vh">
   <ng-container *ngIf="popupshow">
     <ng-container *ngTemplateOutlet="popup"></ng-container>
   </ng-container>
   <ng-container *ngTemplateOutlet="promoter"></ng-container>
 </div>
-
 <ng-template #popup>
   <div
     class="w-100 v-100 bg-gray-transparent position-fixed grid-center"
@@ -43,7 +43,7 @@
     <div class="d-flex">
       <div
         *ngFor="let tab of tabs"
-        class="btn text-danger rounded-0 rounded-top"
+        class="btn text-danger rounded-0 rounded-top fw-bold"
         [ngClass]="{ 'bg-light': activeTab == tab }"
       >
         {{ tab }}
@@ -79,22 +79,21 @@
           </div>
         </div>
       </div>
-
       <table
         class="table-content"
-        *ngIf="this.service.tableData | async; let data"
+        *ngIf="this.service.tableData | async; let d"
       >
         <thead class="bg-1">
           <tr class="p-1">
             <th><input class="m-3" type="checkbox" /></th>
-            <th class="p-3" *ngFor="let col of data[0]">{{ col }}</th>
+            <th class="p-3" *ngFor="let col of d.cols">{{ col }}</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr class="" *ngFor="let row of data">
+          <tr class="" *ngFor="let row of d.data">
             <td><input type="checkbox" class="m-0" /></td>
-            <td class="p-3" *ngFor="let data of row">{{ data }}</td>
+            <td class="p-3" *ngFor="let col of d.cols">{{ row[col] }}</td>
             <td
               class="c-pointer text-primary"
               role="button"
