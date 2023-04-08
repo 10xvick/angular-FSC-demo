@@ -1,0 +1,110 @@
+<!-- <app-top-bar></app-top-bar> -->
+
+<div class="bg-1" style="height:100vh">
+  <ng-container *ngIf="popupshow">
+    <ng-container *ngTemplateOutlet="popup"></ng-container>
+  </ng-container>
+  <ng-container *ngTemplateOutlet="promoter"></ng-container>
+</div>
+
+<ng-template #popup>
+  <div
+    class="w-100 v-100 bg-gray-transparent position-fixed grid-center"
+    style="height:100vh;"
+  >
+    <div class="bg-light rounded-3 p-2" style="max-width:50vw">
+      <div class="w-100 text-end" role="button" (click)="popuptoggle()">X</div>
+      <div
+        class="d-flex overflow-auto pe-none"
+        style="margin-top:-30px;flex-wrap:wrap;max-height:75vh"
+      >
+        <div class="p-4" *ngFor="let data of tableCols">
+          <div style="font-size:11px">{{ data }}</div>
+          <div style="font-size:15px" class="fw-bold">No</div>
+        </div>
+      </div>
+      <div class="d-flex">
+        <button class="btn btn-xl me-1 btn-danger px-4 rounded-3">
+          Approve
+        </button>
+        <button
+          class="btn btn-xl btn-outline-danger px-4 rounded-3"
+          (click)="popuptoggle()"
+        >
+          Reject
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #promoter>
+  <div class="p-3">
+    <div class="d-flex">
+      <div
+        *ngFor="let tab of tabs"
+        class="btn text-danger rounded-0 rounded-top"
+        [ngClass]="{ 'bg-light': activeTab == tab }"
+      >
+        {{ tab }}
+      </div>
+    </div>
+
+    <div class="bg-light w-100 p-3">
+      <div class="d-flex p-2">
+        <div class="px-2">
+          <input type="radio" />&nbsp;<span class="">Pending</span>
+        </div>
+        <div class=""><input type="radio" />&nbsp;<span>Rejected</span></div>
+      </div>
+      <div class="rounded-3 p-2 py-3 mb-2">
+        <div class="d-flex justify-content-between">
+          <div class="text-md">
+            Refresh Every 2 minutes ? &nbsp;
+            <button
+              class="btn btn-xl btn-outline-danger px-4 rounded-3"
+              (click)="this.service.refresh$.next()"
+            >
+              Refresh now O
+            </button>
+          </div>
+
+          <div class="d-flex">
+            <button class="btn btn-xl me-1 btn-danger px-4 rounded-3">
+              Approve
+            </button>
+            <button class="btn btn-xl btn-outline-danger px-4 rounded-3">
+              Reject
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <table
+        class="table-content"
+        *ngIf="this.service.tableData | async; let data"
+      >
+        <thead class="bg-1">
+          <tr class="p-1">
+            <th><input class="m-3" type="checkbox" /></th>
+            <th class="p-3" *ngFor="let col of data[0]">{{ col }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="" *ngFor="let row of data">
+            <td><input type="checkbox" class="m-0" /></td>
+            <td class="p-3" *ngFor="let data of row">{{ data }}</td>
+            <td
+              class="c-pointer text-primary"
+              role="button"
+              (click)="popuptoggle()"
+            >
+              View details
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

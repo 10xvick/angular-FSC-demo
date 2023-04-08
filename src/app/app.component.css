@@ -1,0 +1,62 @@
+p {
+  font-family: Lato;
+}
+
+/*
+Copyright Google LLC. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license
+*/
+
+.grid-center {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+
+
+.bg-1 {
+  background: rgba(216, 216, 216, 0.377);
+}
+
+.bg-gray-transparent {
+  background: rgba(0, 0, 0, 0.644);
+}
+
+.btn-danger:not(:hover) {
+  background-color: #a30000;
+}
+.btn-outline-danger:not(:hover) {
+  border-color: #a30000;
+  color: #a30000;
+}
+
+.table-content {
+  min-width: 400px;
+  border-radius: 0.5rem;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 2px;
+  font-size: smaller;
+}
+
+td {
+  padding: 1rem;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
+
+td:first-child,
+th:first-child {
+  border-radius: 10px 0 0 10px;
+}
+td:last-child,
+th:last-child {
+  border-radius: 0 10px 10px 0;
+}
+td:first-child {
+  border-left: 1px solid lightgray;
+}
+td:last-child {
+  border-right: 1px solid lightgray;
+}
