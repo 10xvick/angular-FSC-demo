@@ -7,43 +7,63 @@ import { map, startWith, switchMap, takeUntil, delay } from 'rxjs/operators';
 export class AppService {
   constructor(private http: HttpClient) {}
 
-  private dummy: Observable<any[]> = new Observable((Subscriber) => {
-    const sample = {
-      fileId: '123456',
-      requestID: '654321',
-      distributorNo: '9896968787',
-      userNo: '9876765656',
-      usertype: 'Acquisition BDE',
-      userCategory: 'Ranger',
-      userName: 'Arun Kumar',
-      fatherName: 'Om Prakash',
-      DOB: '01/12/1992',
-      DOJ: '07/04/2023',
-      interviewerNo: '9785858585',
-      interviewerOLM: '213454',
-      interviewDate: '07/04/23',
-      access: ['Ranger', 'Mitra'],
-      status: 'pending',
-      remark: 'Successfully Raised',
-      remarkType: 'Auto',
-    };
-    const cols = Object.keys(sample);
-    const data = Array(10).fill(sample);
-    Subscriber.next({ cols: cols, data: data });
-  });
+  private sample = {
+    meta: {
+      status: 0,
+      description: 'SUCCESS',
+      code: '000',
+    },
+    data: {
+      page: 1,
+      totalPage: 1,
+      pageSize: 50,
+      userWhitelistDTO: [
+        {
+          id: 34,
+          requestId: 'RQ202304122345598715',
+          distributorNo: '9896968787',
+          supervisorNo: '9896968787',
+          circleId: 'DL',
+          userNo: '9876765656',
+          userType: 'Acquisition BDE',
+          rangerCategory: 'RNM',
+          mitraCategory: 'COPOS',
+          userName: 'Arun Kumar',
+          dob: '01-12-1992',
+          doj: '07-04-2023',
+          interviewNo: '277897',
+          interviewOlm: 'A0277897',
+          interviewDate: '07-04-2023',
+          status: 'PENDING',
+          statusCode: '210',
+          access: ['Ranger', 'Mitra'],
+          remark: 'Successfully Raised',
+          remarkType: 'Auto',
+          creationTime: '12-04-2023 23:45:59',
+          modificationTime: '12-04-2023 23:45:59',
+        },
+      ],
+    },
+    statusCode: '200',
+  };
 
   /** refresh subject | call Next() to trigger */
   public refresh$ = new BehaviorSubject<void>(null);
   /** table data observable | use with async pipe */
   public tableData = this.refresh$.pipe(
     switchMap(() =>
-      interval(120000 / 30).pipe(
+      interval(120000 / 100).pipe(
         startWith(0),
         switchMap((e) => {
           console.log('refresh');
-          return this.dummy || this.http.get<any[]>('/api/data');
+          return of(this.sample) || this.http.get<any[]>('/api/data');
         }),
-        takeUntil(of(1).pipe(delay(5000)))
+        map((response:any) => {
+          response.data.cols = Object.keys(response.data.userWhitelistDTO[0]|| {})
+          console.log(response); 
+          return response; 
+        }),
+        takeUntil(of(1).pipe(delay(1000))) // remove
       )
     )
   );

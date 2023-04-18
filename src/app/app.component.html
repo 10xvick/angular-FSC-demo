@@ -1,7 +1,7 @@
 <!-- <app-top-bar></app-top-bar> -->
 
 {{ this.popup.show }}
-<div class="bg-1" style="height:100vh">
+<div class="bg-1 d-flex flex-col overflow-auto" style="height:100vh">
   <ng-container *ngIf="popupshow">
     <ng-container *ngTemplateOutlet="popup"></ng-container>
   </ng-container>
@@ -39,7 +39,7 @@
 </ng-template>
 
 <ng-template #promoter>
-  <div class="p-3">
+  <div class="p-3 d-flex flex-column w-100">
     <div class="d-flex">
       <div
         *ngFor="let tab of tabs"
@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <div class="bg-light w-100 p-3">
+    <div class="bg-light w-100 p-3 d-flex flex-column">
       <div class="d-flex p-2">
         <div class="px-2">
           <input type="radio" />&nbsp;<span class="">Pending</span>
@@ -79,32 +79,34 @@
           </div>
         </div>
       </div>
-
-      <table
-        class="table-content"
-        *ngIf="this.service.tableData | async; let d"
-      >
-        <thead class="bg-1">
-          <tr class="p-1">
-            <th><input class="m-3" type="checkbox" /></th>
-            <th class="p-3" *ngFor="let col of d.cols">{{ col }}</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="" *ngFor="let row of d.data">
-            <td><input type="checkbox" class="m-0" /></td>
-            <td class="p-3" *ngFor="let col of d.cols">{{ row[col] }}</td>
-            <td
-              class="c-pointer text-primary"
-              role="button"
-              (click)="popuptoggle()"
-            >
-              View details
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="flex w-100 overflow-scroll">
+        <ng-container *ngTemplateOutlet="table"></ng-container>
+      </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #table>
+  <table class="table-content" *ngIf="this.service.tableData | async; let d">
+    <thead class="bg-1">
+      <tr class="p-1">
+        <th><input class="m-3" type="checkbox" /></th>
+        <th class="p-3" *ngFor="let col of d.data.cols">{{ col }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="" *ngFor="let row of d.data.userWhitelistDTO">
+        <td><input type="checkbox" class="m-0" /></td>
+        <td class="p-3" *ngFor="let col of d.data.cols">{{ row[col] }}</td>
+        <td
+          class="c-pointer text-primary"
+          role="button"
+          (click)="popuptoggle()"
+        >
+          View details
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </ng-template>
