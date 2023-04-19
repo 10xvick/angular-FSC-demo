@@ -9,8 +9,8 @@ import { AppService } from './app.service';
 export class AppComponent {
   constructor(private service: AppService) {}
 
-  tabs = ['Pending', 'Whitelisted', 'Rejected'];
-  activeTab = 'Pending';
+  tabs = ['Whitelisting Requests', 'Ranger Details', 'Upload Rangers'];
+  activeTab = this.tabs[0];
 
   popup: any = {
     show: true,
@@ -29,4 +29,7 @@ export class AppComponent {
       console.log(this.popup.show);
     } else this.popupshow = !this.popupshow;
   };
+
+  pages:number[] = Array(10).fill(0).map((e,i)=>i+1);
 }
+

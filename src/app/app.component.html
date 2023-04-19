@@ -43,8 +43,8 @@
     <div class="d-flex">
       <div
         *ngFor="let tab of tabs"
-        class="btn text-danger rounded-0 rounded-top fw-bold"
-        [ngClass]="{ 'bg-light': activeTab == tab }"
+        class="btn rounded-0 rounded-top"
+        [ngClass]="{ 'bg-light text-danger fw-bold pe-none': activeTab == tab }"
       >
         {{ tab }}
       </div>
@@ -60,12 +60,29 @@
       <div class="rounded-3 p-2 py-3 mb-2">
         <div class="d-flex justify-content-between">
           <div class="text-md">
-            Refresh Every 2 minutes ? &nbsp;
+            Refresh Every 2 minutes &nbsp;
             <button
               class="btn btn-xl btn-outline-danger px-4 rounded-3"
               (click)="this.service.refresh$.next()"
             >
-              Refresh now O
+              Refresh now
+              <span
+                ><svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  height="1em"
+                  width="1em"
+                >
+                  <path
+                    fill="none"
+                    stroke-width="2"
+                    d="M20,8 C18.5974037,5.04031171 15.536972,3 12,3 C7.02943725,3 3,7.02943725 3,12 C3,16.9705627 7.02943725,21 12,21 L12,21 C16.9705627,21 21,16.9705627 21,12 M21,3 L21,9 L15,9"
+                  ></path>
+                  <!--  -->
+                </svg></span
+              >
             </button>
           </div>
 
@@ -79,33 +96,98 @@
           </div>
         </div>
       </div>
-      <div class="flex w-100 overflow-scroll">
-        <ng-container *ngTemplateOutlet="table"></ng-container>
-      </div>
+      <ng-container *ngIf="this.service.tableData | async; let d">
+        <div class="flex w-100 overflow-scroll">
+          <ng-container
+            *ngTemplateOutlet="
+              table;
+              context: {
+                data: d.data.userWhitelistDTO,
+                defaultCols: d.data.defaultCols,
+                cols: d.data.cols,
+                filters: d.data.filters
+              }
+            "
+          ></ng-container>
+        </div>
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-light">
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width="0"
+              viewBox="0 0 1024 1024"
+              height="24"
+              width="24"
+            >
+              <path
+                d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 0 0 0 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"
+              ></path>
+            </svg>
+          </button>
+          <button
+            class="btn btn-light fw-bold fs-5" [ngClass]="{'btn-danger text-light pe-none':d.data.page == page}"
+            *ngFor="let page of d.data.totalPage"
+          >
+            {{ page }}
+          </button>
+          <button class="btn btn-light">
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width="0"
+              viewBox="0 0 1024 1024"
+              height="24"
+              width="24"
+            >
+              <path
+                d="M765.7 486.8L314.9 134.7A7.97 7.97 0 0 0 302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 0 0 0-50.4z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-template>
 
-<ng-template #table>
-  <table class="table-content" *ngIf="this.service.tableData | async; let d">
+<ng-template
+  #table
+  let-data="data"
+  let-defaultCols="defaultCols"
+  let-cols="cols"
+  let-filters="filters"
+>
+  <table class="table-content">
     <thead class="bg-1">
       <tr class="p-1">
-        <th><input class="m-3" type="checkbox" /></th>
-        <th class="p-3" *ngFor="let col of d.data.cols">{{ col }}</th>
-        <th></th>
+        <th class="p-3" *ngFor="let col of defaultCols">
+          {{ col }}
+          <span *ngIf="filters[col]">
+            <svg
+              viewBox="0 0 24 24"
+              height="1.3em"
+              width="1.3em"
+            >
+              <path
+                d="M21 3H5a1 1 0 0 0-1 1v2.59c0 .523.213 1.037.583 1.407L10 13.414V21a1.001 1.001 0 0 0 1.447.895l4-2c.339-.17.553-.516.553-.895v-5.586l5.417-5.417c.37-.37.583-.884.583-1.407V4a1 1 0 0 0-1-1zm-6.707 9.293A.996.996 0 0 0 14 13v5.382l-2 1V13a.996.996 0 0 0-.293-.707L6 6.59V5h14.001l.002 1.583-5.71 5.71z"
+              ></path>
+            </svg>
+          </span>
+        </th>
+        <th class="p-3">Approve</th>
+        <th class="p-3">Reject</th>
+        <th class="p-3">Comment</th>
+        <th class="p-3"></th>
       </tr>
     </thead>
     <tbody>
-      <tr class="" *ngFor="let row of d.data.userWhitelistDTO">
-        <td><input type="checkbox" class="m-0" /></td>
-        <td class="p-3" *ngFor="let col of d.data.cols">{{ row[col] }}</td>
-        <td
-          class="c-pointer text-primary"
-          role="button"
-          (click)="popuptoggle()"
-        >
-          View details
-        </td>
+      <tr class="" *ngFor="let row of data">
+        <td class="p-3" *ngFor="let col of defaultCols">{{ row[col] }}</td>
+        <td><input class="w-100" type="checkbox" /></td>
+        <td><input class="w-100" type="checkbox" /></td>
+        <td><input class="w-100" type="text" /></td>
+        <td role="button" (click)="popuptoggle()">></td>
       </tr>
     </tbody>
   </table>

@@ -15,8 +15,23 @@ export class AppService {
     },
     data: {
       page: 1,
-      totalPage: 1,
+      totalPage: 4,
       pageSize: 50,
+      filters: {
+        circleId: 'text',
+        userType: 'text',
+        interviewNo: 'text',
+        interviewOlm: 'text',
+      },
+      defaultCols: [
+        'circleId',
+        'userName',
+        'userType',
+        'interviewNo',
+        'interviewOlm',
+        'rangerCategory',
+        'mitraCategory',
+      ],
       userWhitelistDTO: [
         {
           id: 34,
@@ -58,10 +73,15 @@ export class AppService {
           console.log('refresh');
           return of(this.sample) || this.http.get<any[]>('/api/data');
         }),
-        map((response:any) => {
-          response.data.cols = Object.keys(response.data.userWhitelistDTO[0]|| {})
-          console.log(response); 
-          return response; 
+        map((response: any) => {
+          response.data.cols = Object.keys(
+            response.data.userWhitelistDTO[0] || {}
+          );
+          response.data.totalPage = Array(response.data.totalPage)
+            .fill(0)
+            .map((e, i) => i + 1);
+          console.log(response);
+          return response;
         }),
         takeUntil(of(1).pipe(delay(1000))) // remove
       )
