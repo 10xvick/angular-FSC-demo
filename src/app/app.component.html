@@ -4,31 +4,37 @@
   <ng-container *ngTemplateOutlet="promoter"></ng-container>
 </div>
 
-<ng-template #popup let-cols>
-   {{cols | json}} abc
+<ng-template #promoter_details_popup>
   <div
-    class="w-100 v-100 bg-gray-transparent position-fixed grid-center"
+    class="
+      w-100
+      v-100
+      bg-gray-transparent
+      position-fixed
+      start-0
+      top-0
+      grid-center
+    "
     style="height:100vh;"
   >
-    <div class="bg-light rounded-3 p-2" style="max-width:50vw">
-      <div class="w-100 text-end" role="button" (click)="popuptoggle()">X</div>
+    <div class="bg-light rounded-3 p-2 pe-auto" style="max-width:50vw">
+      <div class="w-100 text-end" role="button" (click)="setDetails()">x</div>
       <div
-        class="d-flex overflow-auto pe-none"
+        class="d-flex overflow-auto"
         style="margin-top:-30px;flex-wrap:wrap;max-height:75vh"
       >
-        <div class="p-4" *ngFor="let field of fields">
-          <div style="font-size:11px">{{ data[field] }}</div>
-          <div style="font-size:15px" class="fw-bold">No</div>
+        <div class="p-4" *ngFor="let field of details | keyvalue">
+          <div style="font-size:11px">{{ field.key }}</div>
+          <div style="font-size:15px" class="fw-bold">
+            {{ field.value }}
+          </div>
         </div>
       </div>
       <div class="d-flex">
         <button class="btn btn-xl me-1 btn-danger px-4 rounded-3">
           Approve
         </button>
-        <button
-          class="btn btn-xl btn-outline-danger px-4 rounded-3"
-          (click)="popuptoggle()"
-        >
+        <button class="btn btn-xl btn-outline-danger px-4 rounded-3" (click)="setDetails()">
           Reject
         </button>
       </div>
@@ -95,6 +101,11 @@
         </div>
       </div>
       <ng-container *ngIf="this.service.tableData | async; let d">
+        <ng-container *ngIf="details">
+          <ng-container
+            *ngTemplateOutlet="promoter_details_popup"
+          ></ng-container>
+        </ng-container>
         <div class="flex w-100 overflow-scroll">
           <ng-container
             *ngTemplateOutlet="
@@ -124,7 +135,8 @@
             </svg>
           </button>
           <button
-            class="btn btn-light fw-bold fs-5" [ngClass]="{'btn-danger text-light pe-none':d.data.page == page}"
+            class="btn btn-light fw-bold fs-5"
+            [ngClass]="{ 'btn-danger text-light pe-none': d.data.page == page }"
             *ngFor="let page of d.data.totalPage"
           >
             {{ page }}
@@ -148,7 +160,7 @@
     </div>
   </div>
 </ng-template>
- 
+
 <ng-template
   #table
   let-data="data"
@@ -162,11 +174,7 @@
         <th class="p-3" *ngFor="let col of defaultCols">
           {{ col }}
           <span *ngIf="filters[col]">
-            <svg
-              viewBox="0 0 24 24"
-              height="1.3em"
-              width="1.3em"
-            >
+            <svg viewBox="0 0 24 24" height="1.3em" width="1.3em">
               <path
                 d="M21 3H5a1 1 0 0 0-1 1v2.59c0 .523.213 1.037.583 1.407L10 13.414V21a1.001 1.001 0 0 0 1.447.895l4-2c.339-.17.553-.516.553-.895v-5.586l5.417-5.417c.37-.37.583-.884.583-1.407V4a1 1 0 0 0-1-1zm-6.707 9.293A.996.996 0 0 0 14 13v5.382l-2 1V13a.996.996 0 0 0-.293-.707L6 6.59V5h14.001l.002 1.583-5.71 5.71z"
               ></path>
@@ -185,19 +193,19 @@
         <td><input class="w-100" type="checkbox" /></td>
         <td><input class="w-100" type="checkbox" /></td>
         <td><input class="w-100" type="text" /></td>
-        <td role="button" (click)="popuptoggle()">
-
-          <ng-container
-          *ngTemplateOutlet="
-            popup;
-            context: {
-              cols:cols
-            }
-          "
-        ></ng-container>
-
-            {{cols[0]}}
-          <svg stroke="#027BFC" fill="#027BFC" stroke-width="40" viewBox="0 0 1024 1024" height="24" width="24" ><path d="M271.653 1023.192c-8.685 0-17.573-3.432-24.238-10.097-13.33-13.33-13.33-35.144 0-48.474L703.67 508.163 254.08 58.573c-13.33-13.331-13.33-35.145 0-48.475 13.33-13.33 35.143-13.33 48.473 0L776.38 483.925c13.33 13.33 13.33 35.143 0 48.473l-480.492 480.694c-6.665 6.665-15.551 10.099-24.236 10.099z"></path></svg>
+        <td role="button" (click)="setDetails(row)">
+          <svg
+            stroke="#027BFC"
+            fill="#027BFC"
+            stroke-width="40"
+            viewBox="0 0 1024 1024"
+            height="24"
+            width="24"
+          >
+            <path
+              d="M271.653 1023.192c-8.685 0-17.573-3.432-24.238-10.097-13.33-13.33-13.33-35.144 0-48.474L703.67 508.163 254.08 58.573c-13.33-13.331-13.33-35.145 0-48.475 13.33-13.33 35.143-13.33 48.473 0L776.38 483.925c13.33 13.33 13.33 35.143 0 48.473l-480.492 480.694c-6.665 6.665-15.551 10.099-24.236 10.099z"
+            ></path>
+          </svg>
         </td>
       </tr>
     </tbody>
