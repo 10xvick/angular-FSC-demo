@@ -45,7 +45,7 @@
 <ng-template #promoter>
   <div class="p-3 d-flex flex-column w-100">
     <div class="d-flex">
-      <div
+      <div (click)="activeTab=tab"
         *ngFor="let tab of tabs"
         class="btn rounded-0 rounded-top"
         [ngClass]="{ 'bg-light text-danger fw-bold pe-none': activeTab == tab }"
@@ -173,12 +173,22 @@
       <tr class="p-1">
         <th class="p-3" *ngFor="let col of defaultCols">
           {{ col }}
-          <span *ngIf="filters[col]">
+          <span class="position-relative" *ngIf="filters[col]" (click)="filterc = col">
             <svg viewBox="0 0 24 24" height="1.3em" width="1.3em">
               <path
                 d="M21 3H5a1 1 0 0 0-1 1v2.59c0 .523.213 1.037.583 1.407L10 13.414V21a1.001 1.001 0 0 0 1.447.895l4-2c.339-.17.553-.516.553-.895v-5.586l5.417-5.417c.37-.37.583-.884.583-1.407V4a1 1 0 0 0-1-1zm-6.707 9.293A.996.996 0 0 0 14 13v5.382l-2 1V13a.996.996 0 0 0-.293-.707L6 6.59V5h14.001l.002 1.583-5.71 5.71z"
               ></path>
             </svg>
+            <div *ngIf="filterc == col" class="position-absolute card bg-light border p-2">
+              <label>
+                <input #search class="form-control form-control-sm mb-1" placeholder="search" type="text" />
+              </label>
+              <label *ngFor="let row of data">
+                <input type="checkbox" class="form-check-input me-1" [(ngModel)]="filters[col][row[col]]">
+                {{row[col]}}
+              </label>
+              <button class="btn btn-danger" (click)="filterSubmit($event,search.value,filters,col)"> Submit </button>
+            </div>
           </span>
         </th>
         <th class="p-3">Approve</th>
@@ -188,7 +198,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="" *ngFor="let row of data">
+      <tr class="" *ngFor="let row of data"> 
         <td class="p-3" *ngFor="let col of defaultCols">{{ row[col] }}</td>
         <td><input class="w-100" type="checkbox" /></td>
         <td><input class="w-100" type="checkbox" /></td>

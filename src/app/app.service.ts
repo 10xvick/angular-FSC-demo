@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { BehaviorSubject, interval, Observable, of } from 'rxjs';
 import { map, startWith, switchMap, takeUntil, delay } from 'rxjs/operators';
 
 @Injectable()
 export class AppService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,public fb:FormBuilder) {}
 
   private sample = {
     meta: {
@@ -18,10 +19,10 @@ export class AppService {
       totalPage: 4,
       pageSize: 50,
       filters: {
-        circleId: 'text',
-        userType: 'text',
-        interviewNo: 'text',
-        interviewOlm: 'text',
+        circleId:{},
+        userType: {},
+        interviewNo: {},
+        interviewOlm: {},
       },
       defaultCols: [
         'circleId',
@@ -39,6 +40,30 @@ export class AppService {
           distributorNo: '9896968787',
           supervisorNo: '9896968787',
           circleId: 'DL',
+          userNo: '9876765656',
+          userType: 'Acquisition BDE',
+          rangerCategory: 'RNM',
+          mitraCategory: 'COPOS',
+          userName: 'Arun Kumar',
+          dob: '01-12-1992',
+          doj: '07-04-2023',
+          interviewNo: '277897',
+          interviewOlm: 'A0277897',
+          interviewDate: '07-04-2023',
+          status: 'PENDING',
+          statusCode: '210',
+          access: ['Ranger', 'Mitra'],
+          remark: 'Successfully Raised',
+          remarkType: 'Auto',
+          creationTime: '12-04-2023 23:45:59',
+          modificationTime: '12-04-2023 23:45:59',
+        },
+        {
+          id: 34,
+          requestId: 'RQ202304122345598715',
+          distributorNo: '9896968787',
+          supervisorNo: '9896968787',
+          circleId: 'DLF',
           userNo: '9876765656',
           userType: 'Acquisition BDE',
           rangerCategory: 'RNM',
